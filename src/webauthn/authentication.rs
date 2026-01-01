@@ -1,6 +1,7 @@
 use crate::db::{challenges, credentials, users};
 use crate::error::{AppError, AppResult};
 use crate::state::AppState;
+use base64::prelude::*;
 use serde_json::Value;
 use webauthn_rs::prelude::*;
 
@@ -47,8 +48,18 @@ pub async fn finish_authentication(
     user_id: &str,
     credential: &Value,
 ) -> AppResult<String> {
+    // Convert base64url user ID back to UUID
+    let user_id_bytes = BASE64_URL_SAFE_NO_PAD
+        .decode(user_id.as_bytes())
+        .map_err(|_| AppError::BadRequest("Invalid user ID encoding".to_string()))?;
+
+    let user_uuid = Uuid::from_slice(&user_id_bytes)
+        .map_err(|_| AppError::BadRequest("Invalid user ID format".to_string()))?;
+
+    let user_id_str = user_uuid.to_string();
+
     // Get user
-    let user = users::find_by_id(&state.db, user_id).await?;
+    let user = users::find_by_id(&state.db, &user_id_str).await?;
 
     // Retrieve authentication challenge state
     let challenge = challenges::get_authentication_challenge(&state.db, &user.id).await?;
