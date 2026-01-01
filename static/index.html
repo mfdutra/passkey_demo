@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passkey Authentication Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 Passkey Authentication Demo</h1>
+            <p class="subtitle">WebAuthn/FIDO2 passwordless authentication</p>
+        </header>
+
+        <!-- Session Info -->
+        <div id="session-info" class="card hidden">
+            <h3>✅ Logged In</h3>
+            <div id="user-details"></div>
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Registration Section -->
+        <div id="registration-section" class="card">
+            <h2>Register New Account</h2>
+            <form id="register-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="reg-username">Email / Username:</label>
+                    <input type="text" id="reg-username" placeholder="alice@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-displayname">Display Name:</label>
+                    <input type="text" id="reg-displayname" placeholder="Alice Smith" required>
+                </div>
+                <button type="button" onclick="register()">Register with Passkey</button>
+            </form>
+        </div>
+
+        <!-- Authentication Section -->
+        <div id="authentication-section" class="card">
+            <h2>Login</h2>
+            <form id="login-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="auth-username">Email / Username:</label>
+                    <input type="text" id="auth-username" placeholder="alice@example.com" required>
+                </div>
+                <button type="button" onclick="authenticate()">Login with Passkey</button>
+            </form>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="status" class="status"></div>
+
+        <!-- Info Section -->
+        <div class="info-card">
+            <h3>ℹ️ About This Demo</h3>
+            <ul>
+                <li><strong>Registration:</strong> Creates a new account with a passkey (biometric or security key)</li>
+                <li><strong>Login:</strong> Authenticates using your passkey</li>
+                <li><strong>Passwordless:</strong> No passwords needed - more secure and convenient</li>
+                <li><strong>Platform Support:</strong> Works on Chrome, Firefox, Safari, and Edge</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
