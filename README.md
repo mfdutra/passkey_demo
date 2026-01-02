@@ -29,8 +29,8 @@ A Rust-based web server prototype demonstrating passwordless authentication usin
 ### 1. Clone and Setup
 
 ```bash
-git clone <repository-url>
-cd passkey
+git clone https://github.com/mfdutra/passkey_demo.git
+cd passkey_demo
 cp .env.example .env
 ```
 
