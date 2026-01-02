@@ -224,7 +224,7 @@ RUST_LOG=debug cargo run
 
 ## License
 
-MIT
+GPLv3
 
 ## Contributing
 
