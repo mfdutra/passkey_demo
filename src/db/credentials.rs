@@ -69,12 +69,15 @@ pub async fn save_credential(
 /// - Empty vector if user has no credentials
 /// - Vector of credentials if found
 /// - Error only if database operation fails
-pub async fn find_by_user_id(pool: &SqlitePool, user_id: &str) -> AppResult<Vec<PasskeyCredential>> {
+pub async fn find_by_user_id(
+    pool: &SqlitePool,
+    user_id: &str,
+) -> AppResult<Vec<PasskeyCredential>> {
     let credentials = sqlx::query_as::<_, PasskeyCredential>(
         "SELECT * FROM passkey_credentials WHERE user_id = ?",
     )
     .bind(user_id)
-    .fetch_all(pool)  // fetch_all returns Vec, empty if no rows
+    .fetch_all(pool) // fetch_all returns Vec, empty if no rows
     .await?;
 
     Ok(credentials)
@@ -91,18 +94,17 @@ pub async fn find_by_credential_id(
     pool: &SqlitePool,
     credential_id: &str,
 ) -> AppResult<PasskeyCredential> {
-    let credential = sqlx::query_as::<_, PasskeyCredential>(
-        "SELECT * FROM passkey_credentials WHERE id = ?",
-    )
-    .bind(credential_id)
-    .fetch_one(pool)
-    .await
-    .map_err(|e| match e {
-            sqlx::Error::RowNotFound => {
-                AppError::NotFound(format!("Credential '{}' not found", credential_id))
-            }
-            _ => AppError::Database(e),
-        })?;
+    let credential =
+        sqlx::query_as::<_, PasskeyCredential>("SELECT * FROM passkey_credentials WHERE id = ?")
+            .bind(credential_id)
+            .fetch_one(pool)
+            .await
+            .map_err(|e| match e {
+                sqlx::Error::RowNotFound => {
+                    AppError::NotFound(format!("Credential '{}' not found", credential_id))
+                }
+                _ => AppError::Database(e),
+            })?;
 
     Ok(credential)
 }
@@ -133,9 +135,9 @@ pub async fn update_counter(
          SET counter = ?, last_used_at = ?
          WHERE id = ?",
     )
-    .bind(new_counter as i64)  // New counter value
-    .bind(now)                  // Current timestamp
-    .bind(credential_id)        // Which credential to update
+    .bind(new_counter as i64) // New counter value
+    .bind(now) // Current timestamp
+    .bind(credential_id) // Which credential to update
     .execute(pool)
     .await?;
 

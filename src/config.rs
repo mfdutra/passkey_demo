@@ -93,7 +93,7 @@ impl Config {
             // The ? operator propagates parse errors
             port: env::var("PORT")
                 .unwrap_or_else(|_| "8080".to_string())
-                .parse()?,  // This can fail if PORT is not a valid number
+                .parse()?, // This can fail if PORT is not a valid number
 
             // Database URL for SQLite
             // The "mode=rwc" parameter means: read, write, create

@@ -10,8 +10,8 @@
 //! - **UUIDs**: Universally Unique Identifiers for database primary keys
 
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};  // For JSON conversion
-use uuid::Uuid;  // For generating unique IDs
+use serde::{Deserialize, Serialize}; // For JSON conversion
+use uuid::Uuid; // For generating unique IDs
 
 /// User account information
 ///

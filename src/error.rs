@@ -15,7 +15,7 @@ use axum::{
     Json,
 };
 use serde_json::json;
-use thiserror::Error;  // Simplifies error type creation with derive macros
+use thiserror::Error; // Simplifies error type creation with derive macros
 
 /// Application-wide error type
 ///
@@ -100,7 +100,10 @@ impl IntoResponse for AppError {
                 // Log detailed error for debugging (not shown to user)
                 tracing::error!("Database error: {:?}", e);
                 // Return generic message to user (don't leak database internals)
-                (StatusCode::INTERNAL_SERVER_ERROR, "Database error".to_string())
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Database error".to_string(),
+                )
             }
             AppError::WebAuthn(e) => {
                 tracing::error!("WebAuthn error: {:?}", e);
@@ -109,7 +112,10 @@ impl IntoResponse for AppError {
             }
             AppError::Serialization(e) => {
                 tracing::error!("Serialization error: {:?}", e);
-                (StatusCode::INTERNAL_SERVER_ERROR, "Serialization error".to_string())
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Serialization error".to_string(),
+                )
             }
             // For these errors, the custom message is safe to show to users
             AppError::NotFound(_) => (StatusCode::NOT_FOUND, self.to_string()),

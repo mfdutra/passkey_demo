@@ -15,7 +15,7 @@
 use crate::db::{challenges, credentials, users};
 use crate::error::{AppError, AppResult};
 use crate::state::AppState;
-use base64::prelude::*;  // For base64url encoding/decoding
+use base64::prelude::*; // For base64url encoding/decoding
 use serde_json::Value;
 use webauthn_rs::prelude::*;
 
@@ -53,7 +53,10 @@ use webauthn_rs::prelude::*;
 /// 2. Prompt user to authenticate (Face ID, fingerprint, etc.)
 /// 3. Sign the challenge with the private key
 /// 4. Send the signed assertion back to finish_authentication
-pub async fn start_authentication(state: &AppState, username: &str) -> AppResult<RequestChallengeResponse> {
+pub async fn start_authentication(
+    state: &AppState,
+    username: &str,
+) -> AppResult<RequestChallengeResponse> {
     // Look up user by username
     let user = users::find_by_username(&state.db, username).await?;
 

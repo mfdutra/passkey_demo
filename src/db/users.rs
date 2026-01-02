@@ -42,13 +42,13 @@ pub async fn create_user(pool: &SqlitePool, username: &str, display_name: &str) 
         "INSERT INTO users (id, username, display_name, created_at, updated_at)
          VALUES (?, ?, ?, ?, ?)",
     )
-    .bind(&user.id)           // Bind parameter 1: user ID
-    .bind(&user.username)      // Bind parameter 2: username
-    .bind(&user.display_name)  // Bind parameter 3: display name
-    .bind(&user.created_at)    // Bind parameter 4: creation timestamp
-    .bind(&user.updated_at)    // Bind parameter 5: update timestamp
-    .execute(pool)             // Execute the query
-    .await?;                   // Await result, propagate errors with ?
+    .bind(&user.id) // Bind parameter 1: user ID
+    .bind(&user.username) // Bind parameter 2: username
+    .bind(&user.display_name) // Bind parameter 3: display name
+    .bind(&user.created_at) // Bind parameter 4: creation timestamp
+    .bind(&user.updated_at) // Bind parameter 5: update timestamp
+    .execute(pool) // Execute the query
+    .await?; // Await result, propagate errors with ?
 
     // Return the created user
     Ok(user)
@@ -66,13 +66,15 @@ pub async fn create_user(pool: &SqlitePool, username: &str, display_name: &str) 
 /// This pattern provides better error messages to users vs generic database errors.
 pub async fn find_by_username(pool: &SqlitePool, username: &str) -> AppResult<User> {
     let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE username = ?")
-        .bind(username)       // Safely bind the username parameter
-        .fetch_one(pool)       // Fetch exactly one row (error if 0 or multiple)
+        .bind(username) // Safely bind the username parameter
+        .fetch_one(pool) // Fetch exactly one row (error if 0 or multiple)
         .await
         // Map SQLx errors to AppError for better error messages
         .map_err(|e| match e {
             // If row not found, return a user-friendly error message
-            sqlx::Error::RowNotFound => AppError::NotFound(format!("User '{}' not found", username)),
+            sqlx::Error::RowNotFound => {
+                AppError::NotFound(format!("User '{}' not found", username))
+            }
             // For other database errors, wrap in AppError::Database
             _ => AppError::Database(e),
         })?;
@@ -99,7 +101,9 @@ pub async fn find_by_id(pool: &SqlitePool, user_id: &str) -> AppResult<User> {
         .await
         // Same error mapping pattern as find_by_username
         .map_err(|e| match e {
-            sqlx::Error::RowNotFound => AppError::NotFound(format!("User with id '{}' not found", user_id)),
+            sqlx::Error::RowNotFound => {
+                AppError::NotFound(format!("User with id '{}' not found", user_id))
+            }
             _ => AppError::Database(e),
         })?;
 

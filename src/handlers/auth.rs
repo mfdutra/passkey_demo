@@ -242,7 +242,8 @@ pub async fn authenticate_finish(
 ) -> AppResult<Json<Value>> {
     // Call the WebAuthn authentication verification logic
     // This verifies the signature and returns the user ID
-    let user_id = authentication::finish_authentication(&state, &req.user_id, &req.credential).await?;
+    let user_id =
+        authentication::finish_authentication(&state, &req.user_id, &req.credential).await?;
 
     // Create session by storing user_id
     // The session is stored server-side (in SQLite)
@@ -322,7 +323,10 @@ pub async fn logout(State(_state): State<AppState>, session: Session) -> AppResu
 /// ## Usage
 /// The frontend calls this on page load to check if the user
 /// is still logged in (e.g., after page refresh).
-pub async fn session_info(State(_state): State<AppState>, session: Session) -> AppResult<Json<Value>> {
+pub async fn session_info(
+    State(_state): State<AppState>,
+    session: Session,
+) -> AppResult<Json<Value>> {
     // Try to get user_id from session
     let user_id: Option<String> = session
         .get("user_id")

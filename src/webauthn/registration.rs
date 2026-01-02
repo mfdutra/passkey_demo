@@ -15,7 +15,7 @@
 use crate::db::{challenges, credentials, users};
 use crate::error::{AppError, AppResult};
 use crate::state::AppState;
-use base64::prelude::*;  // For base64url encoding/decoding
+use base64::prelude::*; // For base64url encoding/decoding
 use serde_json::Value;
 use webauthn_rs::prelude::*;
 
@@ -218,11 +218,11 @@ pub async fn finish_registration(
         &state.db,
         &cred_id,
         &user.id,
-        &passkey_bytes,   // Serialized public key and metadata
-        0,                // Initial counter (will increment on each use)
-        None,             // Transports (USB, NFC, etc.) - not tracked in this impl
-        false,            // backup_eligible - not tracked in this impl
-        false,            // backup_state - not tracked in this impl
+        &passkey_bytes, // Serialized public key and metadata
+        0,              // Initial counter (will increment on each use)
+        None,           // Transports (USB, NFC, etc.) - not tracked in this impl
+        false,          // backup_eligible - not tracked in this impl
+        false,          // backup_state - not tracked in this impl
     )
     .await?;
 

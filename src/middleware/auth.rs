@@ -14,11 +14,7 @@
 //! if the user doesn't have a valid session.
 
 use crate::error::AppError;
-use axum::{
-    extract::Request,
-    middleware::Next,
-    response::Response,
-};
+use axum::{extract::Request, middleware::Next, response::Response};
 use tower_sessions::Session;
 
 /// Middleware function that requires authentication

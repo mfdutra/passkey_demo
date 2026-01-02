@@ -14,7 +14,7 @@
 use crate::config::Config;
 use anyhow::Result;
 use sqlx::sqlite::SqlitePool;
-use std::sync::Arc;  // Atomic Reference Counting - for thread-safe sharing
+use std::sync::Arc; // Atomic Reference Counting - for thread-safe sharing
 use webauthn_rs::prelude::*;
 
 /// Shared application state
@@ -86,12 +86,12 @@ impl AppState {
         // Configure WebAuthn with relying party information
         // The RP ID and Origin must match where your app is served from
         let rp_id = config.rp_id.clone();
-        let rp_origin = Url::parse(&config.rp_origin)?;  // Parse and validate URL
+        let rp_origin = Url::parse(&config.rp_origin)?; // Parse and validate URL
 
         // Build the WebAuthn instance
         // This configures the cryptographic parameters for WebAuthn
         let builder = WebauthnBuilder::new(&rp_id, &rp_origin)?;
-        let webauthn = Arc::new(builder.build()?);  // Wrap in Arc for sharing
+        let webauthn = Arc::new(builder.build()?); // Wrap in Arc for sharing
 
         // Return the initialized state
         Ok(AppState { db, webauthn })

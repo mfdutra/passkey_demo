@@ -9,13 +9,13 @@
 //! - **FIDO2**: The underlying cryptographic protocol
 
 // Module declarations - organize code into logical components
-mod config;      // Configuration management (environment variables, settings)
-mod db;          // Database operations (users, credentials, challenges)
-mod error;       // Error handling and custom error types
-mod handlers;    // HTTP request handlers (routes)
-mod middleware;  // Request/response interceptors (authentication checks)
-mod state;       // Shared application state
-mod webauthn;    // WebAuthn/Passkey logic
+mod config; // Configuration management (environment variables, settings)
+mod db; // Database operations (users, credentials, challenges)
+mod error; // Error handling and custom error types
+mod handlers; // HTTP request handlers (routes)
+mod middleware; // Request/response interceptors (authentication checks)
+mod state; // Shared application state
+mod webauthn; // WebAuthn/Passkey logic
 
 // Import the configuration type
 use crate::config::Config;
@@ -28,14 +28,18 @@ use crate::handlers::users::get_current_user;
 // Import shared application state
 use crate::state::AppState;
 // Axum is the web framework - provides routing, middleware, and HTTP handling
-use axum::{middleware as axum_middleware, routing::{get, post}, Router};
+use axum::{
+    middleware as axum_middleware,
+    routing::{get, post},
+    Router,
+};
 // CORS (Cross-Origin Resource Sharing) - allows frontend to call API from different origin
 use tower_http::cors::{Any, CorsLayer};
 // Serves static files (HTML, CSS, JavaScript)
 use tower_http::services::ServeDir;
 // HTTP request/response tracing for debugging and monitoring
-use tower_http::trace::TraceLayer;
 use time::Duration;
+use tower_http::trace::TraceLayer;
 // Session management - keeps users logged in across requests
 use tower_sessions::{Expiry, SessionManagerLayer};
 // SQLite-backed session storage
@@ -113,9 +117,9 @@ async fn main() -> anyhow::Result<()> {
     // This allows the frontend (HTML/JS) to call the API even if served from different origin
     // In production, you should restrict this to specific origins for security
     let cors = CorsLayer::new()
-        .allow_origin(Any)      // Allow requests from any origin (⚠️ use specific origins in production)
-        .allow_methods(Any)     // Allow all HTTP methods (GET, POST, etc.)
-        .allow_headers(Any);    // Allow all request headers
+        .allow_origin(Any) // Allow requests from any origin (⚠️ use specific origins in production)
+        .allow_methods(Any) // Allow all HTTP methods (GET, POST, etc.)
+        .allow_headers(Any); // Allow all request headers
 
     // Build protected routes that require authentication
     // These routes are wrapped with the require_auth middleware
@@ -130,31 +134,24 @@ async fn main() -> anyhow::Result<()> {
     let app = Router::new()
         // Health check endpoint - useful for monitoring and load balancers
         .route("/health", get(health_check))
-
         // Registration flow (creating a new passkey)
-        .route("/api/auth/register/start", post(register_start))      // Step 1: Get challenge
-        .route("/api/auth/register/finish", post(register_finish))    // Step 2: Verify credential
-
+        .route("/api/auth/register/start", post(register_start)) // Step 1: Get challenge
+        .route("/api/auth/register/finish", post(register_finish)) // Step 2: Verify credential
         // Authentication flow (logging in with a passkey)
-        .route("/api/auth/authenticate/start", post(authenticate_start))    // Step 1: Get challenge
-        .route("/api/auth/authenticate/finish", post(authenticate_finish))  // Step 2: Verify assertion
-
+        .route("/api/auth/authenticate/start", post(authenticate_start)) // Step 1: Get challenge
+        .route("/api/auth/authenticate/finish", post(authenticate_finish)) // Step 2: Verify assertion
         // Session management
-        .route("/api/auth/logout", post(logout))           // End session
-        .route("/api/auth/session", get(session_info))     // Check if logged in
-
+        .route("/api/auth/logout", post(logout)) // End session
+        .route("/api/auth/session", get(session_info)) // Check if logged in
         // Merge in protected routes that require authentication
         .merge(protected_routes)
-
         // Serve static files (index.html, app.js, styles.css, etc.)
         // This serves the frontend from the "static" directory
         .fallback_service(ServeDir::new("static"))
-
         // Apply middleware layers (processed in reverse order)
-        .layer(session_layer)        // Session management
-        .layer(cors)                 // CORS headers
-        .layer(TraceLayer::new_for_http())  // HTTP request/response logging
-
+        .layer(session_layer) // Session management
+        .layer(cors) // CORS headers
+        .layer(TraceLayer::new_for_http()) // HTTP request/response logging
         // Attach shared application state (database, WebAuthn instance)
         .with_state(app_state);
 

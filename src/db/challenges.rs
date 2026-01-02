@@ -53,9 +53,9 @@ pub async fn save_registration_challenge(
     )
     .bind(&challenge.id)
     .bind(&challenge.user_id)
-    .bind(&challenge.challenge_state)  // Serialized PasskeyRegistration state
+    .bind(&challenge.challenge_state) // Serialized PasskeyRegistration state
     .bind(&challenge.created_at)
-    .bind(&challenge.expires_at)       // Auto-set to now + 5 minutes
+    .bind(&challenge.expires_at) // Auto-set to now + 5 minutes
     .execute(pool)
     .await?;
 
